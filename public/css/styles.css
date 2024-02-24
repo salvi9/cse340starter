@@ -4,3 +4,129 @@
 *:after {
   box-sizing: border-box;
 }
+
+body {
+  background-image: url("/images/site/checkerboard.jpg");
+  font-size: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+#wrapper {
+  background-color: white;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 10px;
+  border: lightblue 5px solid;
+}
+
+#top-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.siteName a {
+  font-size: 2rem;
+  color: black;
+}
+
+nav li {
+  color: black;
+  color: white;
+  list-style: none;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-around;
+  background-color: black;
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+nav li a {
+  color: white;
+}
+
+.delorean_container {
+  position: relative;
+  text-align: center;
+  height: 300px;
+}
+
+.delorean {
+  display: block;
+  margin: 0 auto;
+}
+
+.delorean_text {
+  width: 35%;
+  text-align: left;
+  position: relative;
+  top: -15rem;
+  color: #01b0d3;
+  background: #f1e9e94d;
+}
+
+button {
+  color: black;
+  background-color: #01b0d3;
+  width: 80%;
+  border: none;
+  padding: 1rem;
+}
+
+.delorean_information {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.delorean_upgrade {
+  grid-row: 2/3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  text-align: center;
+}
+
+.delorean_review {
+  grid-row: 1/2;
+}
+
+.delorean_review li {
+  padding: 0.5rem;
+}
+
+.img_box {
+  background-color: #01b0d3;
+  height: 80%;
+  padding-top: 5%;
+}
+
+@media screen and (min-width: 500px) {
+  .delorean_text {
+    width: 20%;
+    top: -15rem;
+    left: 9rem;
+  }
+
+  .delorean_information {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+
+  .delorean_upgrade {
+    grid-column: 1/2;
+  }
+
+  .delorean_review {
+    grid-column: 2/3;
+  }
+}
