@@ -41,7 +41,7 @@ Util.buildClassificationGrid = async function (data) {
         " " +
         vehicle.inv_model +
         'details"><img src="' +
-        vehicle.inv_thumbnail +
+        vehicle.inv_image +
         '" alt="Image of ' +
         vehicle.inv_make +
         " " +
@@ -77,6 +77,40 @@ Util.buildClassificationGrid = async function (data) {
   return grid;
 };
 
+Util.buildInventoryGrid = async function (data) {
+  let grid = "";
+  grid += '<div id="vehicle_details">';
+  grid +=
+    '<img src="' +
+    (data[0].inv_image ? data[0].inv_image : "") +
+    '" alt="Image of ' +
+    data[0].inv_make +
+    " " +
+    data[0].inv_model +
+    ' on CSE Motors" />';
+  grid += "<div>";
+  grid +=
+    "<h3>" +
+    data[0].inv_make +
+    " " +
+    data[0].inv_model +
+    " " +
+    "Details" +
+    "</h3>";
+  grid +=
+    "<p >Price:$" +
+    new Intl.NumberFormat("en-US").format(data[0].inv_price) +
+    "</p>";
+  grid += "<p>" + "Description:" + " " + data[0].inv_description + "</p>";
+  grid += "<p>" + "Color:" + " " + data[0].inv_color + "</p>";
+  grid +=
+    "<p>Miles: " +
+    new Intl.NumberFormat("en-US").format(data[0].inv_miles) +
+    "</p>";
+  grid += "</div>";
+  grid += "</div>";
+  return grid;
+};
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

@@ -110,6 +110,42 @@ button {
   padding-top: 5%;
 }
 
+#inv-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 1rem;
+}
+
+#inv-display li {
+  list-style-type: none;
+  border: 1px solid #000000;
+  text-align: center;
+  min-height: 300px;
+}
+
+#vehicle_details {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr;
+  min-height: 470px;
+}
+
+/* #vehicle-details img {
+  width: 100%;
+}
+
+#vehicle-details span {
+  font-weight: bold;
+}
+
+#vehicle-details p {
+  margin: 1rem 0;
+  padding: .5rem 0;
+}
+
+#vehicle-details .background {
+  background-color: #d4d4d46c;
+}
+ */
 @media screen and (min-width: 500px) {
   .delorean_text {
     width: 20%;
@@ -128,5 +164,17 @@ button {
 
   .delorean_review {
     grid-column: 2/3;
+  }
+
+  #vehicle_details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+
+  #vehicle_details img {
+    width: 100%;
+    height: auto;
+    padding-right: 1rem;
   }
 }
