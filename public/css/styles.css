@@ -144,6 +144,13 @@ button {
   margin-bottom: 15px;
 }
 
+input:focus:invalid {
+  background-color: rgb(216, 138, 138);
+}
+input:required:valid {
+  background-color: rgb(168, 238, 180);
+}
+
 /* #vehicle-details img {
   width: 100%;
 }
