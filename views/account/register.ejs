@@ -1,0 +1,49 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { res.redirect('/') } %> <%- messages() %>
+
+<div id="registerContainer">
+  <p>All fields are required</p>
+  <form id="registerForm" action="/account/register-user" method="post">
+    <Fieldset>
+      <label for="firstname">First Name: </label>
+      <input
+        type="text"
+        name="account_firstname"
+        id="firstname"
+        size="10"
+        value="<%= locals.account_firstname %>"
+        required
+      />
+
+      <label for="lastname">Last Name: </label>
+      <input
+        type="text"
+        name="account_lastname"
+        id="lastname"
+        value="<%= locals.account_lastname %>"
+        required
+      />
+
+      <label for="email">Email Address: </label>
+      <input
+        type="email"
+        name="account_email"
+        id="email"
+        value="<%= locals.account_email %>"
+        required
+      />
+
+      <label for="password">Password: </label>
+      <input type="password" name="account_password" id="password" required />
+      <div>
+        <i style="font-size: 12px"
+          >Password must have a minimum of 12 characters in length, contain at
+          least 1 capital letter, contain at least 1 number and contain at least
+          1 special character.</i
+        >
+      </div>
+      <button type="submit">Register</button>
+    </Fieldset>
+  </form>
+</div>
