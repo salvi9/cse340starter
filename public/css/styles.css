@@ -151,6 +151,23 @@ input:required:valid {
   background-color: rgb(168, 238, 180);
 }
 
+#inventoryContainer,
+#classificationContainer {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Form field labels */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
 /* #vehicle-details img {
   width: 100%;
 }

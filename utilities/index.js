@@ -111,6 +111,27 @@ Util.buildInventoryGrid = async function (data) {
   grid += "</div>";
   return grid;
 };
+
+Util.buildVehicleClassification = async function (classification_id = null) {
+  let data = await invModel.getClassifications();
+
+  let options = data.rows.map((row) => {
+    let selected =
+      classification_id != null && row.classification_id == classification_id
+        ? "selected"
+        : "";
+
+    return `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
+  });
+
+  let vehicle_classification = `<select name="classification_id" id="classification_id">
+                                <option>Choose a Classification</option>
+                                ${options.join("")}
+                                </select>`;
+
+  return vehicle_classification;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

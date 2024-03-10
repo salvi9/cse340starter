@@ -116,4 +116,82 @@ validate.checkRegData = async (req, res, next) => {
   next();
 };
 
+validate.checkClassData = async (req, res, next) => {
+  const { classification_name } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    res.render("inventory/add-classification", {
+      errors,
+      title: "Add New Classification",
+      nav,
+      classification_name,
+    });
+    return;
+  }
+  next();
+};
+
+validate.sendInventoryRules = () => {
+  return [
+    body("classification_id")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please select a vehicle classification.")
+      .isNumeric()
+      .withMessage("Vehicle classification ID must be numeric."),
+
+    body("inv_make")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle make."),
+
+    body("inv_model")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle model."),
+
+    body("inv_description")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle description."),
+
+    body("inv_image")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle image."),
+
+    body("inv_thumbnail")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle thumbnail."),
+
+    body("inv_price")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle price.")
+      .isNumeric()
+      .withMessage("Vehicle price must be a decimal or digits."),
+
+    body("inv_year")
+      .trim()
+      .isLength({ min: 4, max: 4 })
+      .withMessage("The vehicle year needs to be a 4-digit year.")
+      .withMessage("Invalid vehicle year."),
+
+    body("inv_miles")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle miles.")
+      .isNumeric()
+      .withMessage("Vehicle miles can only be digits."),
+
+    body("inv_color")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please add the vehicle color."),
+  ];
+};
+
 module.exports = validate;

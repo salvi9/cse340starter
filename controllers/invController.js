@@ -35,4 +35,111 @@ invCont.buildByInventoryId = async function (req, res, next) {
   });
 };
 
+/* ***************************
+ *  Build Vehicle Management view
+ * ************************** */
+invCont.buildVehicleManagement = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("inventory/management", {
+    title: "Vehicle Management",
+    nav,
+    errors: null,
+  });
+};
+
+invCont.buildClassification = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("./inventory/add-classification", {
+    title: "Add New Classification",
+    nav,
+    errors: null,
+  });
+};
+
+invCont.postClassification = async function (req, res) {
+  const { classification_name } = req.body;
+  const classResult = await invModel.sendClassification(classification_name);
+  if (classResult) {
+    let nav = await utilities.getNav();
+    req.flash(
+      "notice",
+      `Congratulations, you\'re registered ${classification_name}.`
+    );
+    res.status(201).render("inventory/management", {
+      title: "Vehicle Management",
+      nav,
+      errors: null,
+    });
+  } else {
+    let nav = await utilities.getNav();
+    req.flash("notice", "Sorry, the registration failed.");
+    res.status(501).render("inventory/add-classification", {
+      title: "Add New Classification",
+      nav,
+      errors: null,
+    });
+  }
+};
+
+invCont.buildByInventory = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  let dropdown = await utilities.buildVehicleClassification();
+  res.render("inventory/add-inventory", {
+    title: "Add Inventory",
+    nav,
+    dropdown,
+    errors: null,
+  });
+};
+
+invCont.sendInventory = async function (req, res) {
+  const {
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+  } = req.body;
+
+  const inventoryResult = await invModel.sendInventory(
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color
+  );
+  if (inventoryResult) {
+    let nav = await utilities.getNav();
+    req.flash(
+      "notice",
+      `Congratulations, you\'ve registered to the Inventory.`
+    );
+    res.status(201).render("inventory/management", {
+      title: "Vehicle Management",
+      nav,
+      errors: null,
+    });
+  } else {
+    let dropdown = await utilities.buildClassificationDropDown();
+    let nav = await utilities.getNav();
+    req.flash("notice", "Sorry, the registration failed.");
+    res.status(501).render("inventory/add-inventory", {
+      title: "Add Inventory",
+      nav,
+      dropdown,
+      errors: null,
+    });
+  }
+};
+
 module.exports = invCont;
