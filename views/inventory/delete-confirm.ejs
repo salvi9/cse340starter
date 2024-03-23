@@ -1,0 +1,42 @@
+<% if (title) { %>
+    <h1>
+        <%= title %>
+    </h1>
+    <% } else { res.redirect('/') } %> <%- messages() %>
+            <% if (errors) { %>
+                <ul class="notice">
+                    <% errors.array().forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
+                    <h2>Please Confirm Delete</h2>
+                    <div id="inventoryContainer">
+                        <p>All fields are required</p>
+                        <form id="deleteForm" action="/inv/deleteVehicle" method="post">
+
+                            <label for="make">Make: </label>
+                            <input id="inv_make" type="text" name="inv_make" placeholder="Min of 3 characters"
+                                value="<%= data.inv_make %>" required readonly />
+                            <label for="model">Model: </label>
+                            <input id="inv_model" type="text" name="inv_model" placeholder="Min of 3 characters"
+                                value="<%= data.inv_model %>" required readonly />
+
+
+                            <label for="price">Price: </label>
+                            <input id="inv_price" type="number" name="inv_price" value="<%= data.inv_price %>"
+                                placeholder="decimal or integer" required readonly />
+                            <label for="year">Year: </label>
+                            <input id="inv_year" type="number" name="inv_year" value="<%= data.inv_year %>"
+                                placeholder="4-digit year" required readonly />
+
+                            <input type="hidden" name="inv_id" <% if(data.inv_id) { %> value="<%= data.inv_id %>
+                                " <% } %> />
+
+                                    <button type="submit">Delete Vehicle</button>
+                        </form>
+                    </div>
+
+                    <!--  <script src="../../public/js/inv-update.js"></script> -->

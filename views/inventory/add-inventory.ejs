@@ -1,12 +1,18 @@
 <% if (title) { %>
 <h1><%= title %></h1>
-<% } else { res.redirect('/') } %>
+<% } else { res.redirect('/') } %> <%- messages() %> <% if (errors) { %>
+<ul class="notice">
+  <% errors.array().forEach(error => { %>
+  <li><%= error.msg %></li>
+  <% }) %>
+</ul>
+<% } %>
 
 <div id="inventoryContainer">
   <p>All fields are required</p>
   <form id="inventoryForm" action="/inv/add-inventory" method="post">
     <label for="classification">Classification: </label>
-    <%- locals.dropdown %>
+    <%- locals.classificationSelect %>
     <label for="make">Make: </label>
     <input
       id="inv_make"

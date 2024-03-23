@@ -194,4 +194,94 @@ validate.sendInventoryRules = () => {
   ];
 };
 
+// INVENTORY VALIDATION
+validate.checkVehicleData = async (req, res, next) => {
+  const {
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+
+  console.log(inv_price);
+
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    const classificationSelect = await utilities.buildClassificationList(
+      classification_id
+    );
+    res.render("inventory/add-inventory", {
+      errors,
+      title: "Add Vehicle",
+      nav,
+      classificationSelect,
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+    });
+    return;
+  }
+  next();
+};
+
+validate.checkVehicleUpdateData = async (req, res, next) => {
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+
+  console.log(inv_price);
+
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    const classificationSelect = await utilities.buildClassificationList(
+      classification_id
+    );
+    const title = inv_make + " " + inv_model;
+    res.render("inventory/edit-inventory", {
+      errors,
+      title: "Edit " + title,
+      nav,
+      classificationSelect,
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+    });
+    return;
+  }
+  next();
+};
+
 module.exports = validate;

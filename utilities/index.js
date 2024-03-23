@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model");
 const Util = {};
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -78,43 +80,38 @@ Util.buildClassificationGrid = async function (data) {
 };
 
 Util.buildInventoryGrid = async function (data) {
+  console.log(`*******DATA*****${data[0]}`);
   let grid = "";
   grid += '<div id="vehicle_details">';
   grid +=
     '<img src="' +
-    (data[0].inv_image ? data[0].inv_image : "") +
+    (data.inv_image ? data.inv_image : "") +
     '" alt="Image of ' +
-    data[0].inv_make +
+    data.inv_make +
     " " +
-    data[0].inv_model +
+    data.inv_model +
     ' on CSE Motors" />';
   grid += "<div>";
   grid +=
-    "<h3>" +
-    data[0].inv_make +
-    " " +
-    data[0].inv_model +
-    " " +
-    "Details" +
-    "</h3>";
+    "<h3>" + data.inv_make + " " + data.inv_model + " " + "Details" + "</h3>";
   grid +=
     "<p >Price:$" +
-    new Intl.NumberFormat("en-US").format(data[0].inv_price) +
+    new Intl.NumberFormat("en-US").format(data.inv_price) +
     "</p>";
-  grid += "<p>" + "Description:" + " " + data[0].inv_description + "</p>";
-  grid += "<p>" + "Color:" + " " + data[0].inv_color + "</p>";
+  grid += "<p>" + "Description:" + " " + data.inv_description + "</p>";
+  grid += "<p>" + "Color:" + " " + data.inv_color + "</p>";
   grid +=
     "<p>Miles: " +
-    new Intl.NumberFormat("en-US").format(data[0].inv_miles) +
+    new Intl.NumberFormat("en-US").format(data.inv_miles) +
     "</p>";
   grid += "</div>";
   grid += "</div>";
   return grid;
 };
 
-Util.buildVehicleClassification = async function (classification_id = null) {
+Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications();
-
+  console.log(`*******************************************${data.rows[0]}`);
   let options = data.rows.map((row) => {
     let selected =
       classification_id != null && row.classification_id == classification_id
@@ -124,7 +121,7 @@ Util.buildVehicleClassification = async function (classification_id = null) {
     return `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
   });
 
-  let vehicle_classification = `<select name="classification_id" id="classification_id">
+  let vehicle_classification = `<select name="classification_id" id="classificationList">
                                 <option>Choose a Classification</option>
                                 ${options.join("")}
                                 </select>`;
@@ -139,5 +136,41 @@ Util.buildVehicleClassification = async function (classification_id = null) {
  **************************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
+
+/* ****************************************
+ * Middleware to check token validity
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("Please log in");
+          res.clearCookie("jwt");
+          return res.redirect("/account/login");
+        }
+        res.locals.accountData = accountData;
+        res.locals.loggedin = 1;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next();
+  } else {
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+};
 
 module.exports = Util;
