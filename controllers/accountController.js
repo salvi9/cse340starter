@@ -96,9 +96,6 @@ async function registerAccount(req, res) {
   }
 }
 
-/* ****************************************
- *  Process login request
- * ************************************ */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
@@ -130,10 +127,103 @@ async function accountLogin(req, res) {
           maxAge: 3600 * 1000,
         });
       }
-      return res.redirect("/account/");
+      return res.redirect("/");
     }
   } catch (error) {
     return new Error("Access Forbidden");
+  }
+}
+
+async function accountLogout(req, res) {
+  try {
+    res.clearCookie("jwt");
+    req.flash("notice", "You have succesfully logged out");
+    return res.redirect("/");
+  } catch (error) {
+    console.error("Logout Error:", error);
+    req.flash("error", "You failed to log out. Please try again.");
+    return res.redirect("/");
+  }
+}
+
+async function accountUpdate(req, res, next) {
+  let nav = await utilities.getNav();
+  const { account_id, account_firstname, account_lastname, account_email } =
+    req.body;
+
+  const updateResult = await accountModel.updateAccount(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  );
+  if (updateResult) {
+    const accountData = await accountModel.getAccountById(account_id);
+    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 3600 * 1000,
+    });
+    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+    req.flash("notice", "The account was successfully updated.");
+    res.redirect("/account/");
+  } else {
+    req.flash("notice", "Sorry, the account was not successfully updated.");
+    res.status(501).render("./account/updateAccount", {
+      title: "Edit Account",
+      nav,
+      errors: null,
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+    });
+  }
+}
+
+async function updatePassword(req, res, next) {
+  let nav = await utilities.getNav();
+  const { account_id, account_password } = req.body;
+  const updateResult = await accountModel.updatePassword(
+    account_id,
+    account_password
+  );
+  if (updateResult) {
+    const accountData = await accountModel.getAccountById(account_id);
+    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 3600 * 1000,
+    });
+    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+    req.flash("notice", "The password was updated.");
+    res.redirect("/account/");
+  } else {
+    req.flash("notice", "The password was not updated.");
+    res.status(501).render("./account/updateAccount", {
+      title: "Edit Account",
+      nav,
+      errors: null,
+      account_id,
+      account_password,
+    });
+  }
+}
+
+async function accountEditView(req, res, next) {
+  let nav = await utilities.getNav();
+  const account_id = parseInt(req.params.account_id);
+  const accountData = await accountModel.getAccountById(account_id);
+  try {
+    res.render("account/updateAccount", {
+      title: "Edit Account Info",
+      nav,
+      errors: null,
+      account_id: accountData.account_id,
+      account_firstname: accountData.account_firstname,
+      account_lastname: accountData.account_lastname,
+      account_email: accountData.account_email,
+    });
+  } catch (error) {
+    error.status = 500;
+    console.error(error.status);
+    next(error);
   }
 }
 
@@ -142,5 +232,9 @@ module.exports = {
   buildRegister,
   registerAccount,
   accountLogin,
+  accountLogout,
   accountManagement,
+  accountUpdate,
+  accountEditView,
+  updatePassword,
 };

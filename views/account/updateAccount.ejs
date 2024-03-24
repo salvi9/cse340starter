@@ -1,0 +1,61 @@
+<% if (title) { %>
+    <h1>
+        <%= title %>
+    </h1>
+    <% } else { res.redirect('/') } %> <%- messages() %>
+            <% if (errors) { %>
+                <ul class="notice">
+                    <% errors.array().forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
+
+                    <div id="registerContainer">
+                        <h2>Update Account</h2>
+                        <form id="registerForm" class="inventoryForm" action="/account/updateAccount" method="post">
+                            <Fieldset>
+                                <label for="firstname">First Name: </label>
+                                <input type="text" name="account_firstname" id="firstname" size="10" required
+                                    value="<%= locals.account_firstname %>" />
+
+                                <label for="lastname">Last Name: </label>
+                                <input type="text" name="account_lastname" id="lastname" required
+                                    value="<%= locals.account_lastname %>" />
+
+                                <label for="email">Email Address: </label>
+                                <input type="email" name="account_email" id="email"
+                                    placeholder="Enter a valid email address" required
+                                    value="<%= locals.account_email %>" />
+
+                                <button type="submit">Edit Account</button>
+                                <input type="hidden" name="account_id" <% if(locals.account_id) { %> value="<%=
+                                    locals.account_id %>"
+                                    <% } %>>
+
+
+                            </Fieldset>
+                        </form>
+                        <h2>Update Password</h2>
+                        <form id="registerForm" class="inventoryForm" action="/account/updatePassword" method="post">
+                            <Fieldset>
+                                <label for="password">Password: </label>
+                                <input type="password" name="account_password" id="password"
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+                                    required />
+                                <div>
+                                    <i style="font-size: 12px">Password must have a minimum of 12 characters in
+                                        length,
+                                        contain at
+                                        least 1 capital letter, contain at least 1 number and contain at least
+                                        1 special character.</i>
+                                </div>
+                                <button type="submit">Edit Password</button>
+                                <input type="hidden" name="account_id" <% if(locals.account_id) { %> value="<%=
+                                    locals.account_id %>"
+                                    <% } %>>
+                            </Fieldset>
+                        </form>
+                    </div>

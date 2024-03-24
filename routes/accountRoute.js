@@ -13,13 +13,14 @@ router.get(
 
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
 
-// Process the login attempt
 router.post(
   "/login",
   regValidate.loginRules(),
   regValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin)
 );
+
+router.get("/logout", utilities.handleErrors(accountController.accountLogout));
 
 router.get(
   "/register",
@@ -34,4 +35,21 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
+router.get(
+  "/updateAccount/:account_id",
+  utilities.handleErrors(accountController.accountEditView)
+);
+router.post(
+  "/updateAccount",
+  regValidate.checkAccountUpdate,
+  utilities.handleErrors(accountController.accountUpdate)
+);
+
+router.post(
+  "/updatePassword",
+  regValidate.checkPasswordUpdate,
+  utilities.handleErrors(accountController.updatePassword)
+);
+
+router;
 module.exports = router;

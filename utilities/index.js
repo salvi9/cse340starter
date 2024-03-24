@@ -173,4 +173,29 @@ Util.checkLogin = (req, res, next) => {
   }
 };
 
+Util.checkAccountType = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    const accountData = await jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    if (
+      accountData &&
+      (accountData.account_type === "Employee" ||
+        accountData.account_type === "Admin")
+    ) {
+      res.locals.accountData = accountData;
+      res.locals.loggedin = 1;
+      return next();
+    } else {
+      req.flash(
+        "notice",
+        "This must NOT be used when delivering the classification or detail views as they are meant for site visitors who may not be logged in."
+      );
+      return res.redirect("/account/login");
+    }
+  }
+};
+
 module.exports = Util;

@@ -16,15 +16,27 @@ router.get(
 );
 
 // Build Vehicle Management Page
-router.get("/", invController.buildVehicleManagement);
-router.get("/add-classification", invController.buildClassification);
+router.get(
+  "/",
+  utilities.checkAccountType,
+  invController.buildVehicleManagement
+);
+router.get(
+  "/add-classification",
+  utilities.checkAccountType,
+  invController.buildClassification
+);
 router.post(
   "/add-classification",
   regValidate.checkClassData,
   invController.postClassification
 );
 
-router.get("/add-inventory", invController.buildByInventory);
+router.get(
+  "/add-inventory",
+  utilities.checkAccountType,
+  invController.buildByInventory
+);
 router.post(
   "/add-inventory",
   regValidate.sendInventoryRules(),
@@ -33,6 +45,7 @@ router.post(
 
 router.get(
   "/edit/:inv_id",
+  utilities.checkAccountType,
   utilities.handleErrors(invController.editInventoryItemView)
 );
 router.post(
@@ -43,6 +56,7 @@ router.post(
 
 router.get(
   "/delete/:invId",
+  utilities.checkAccountType,
   utilities.handleErrors(invController.deleteVehicleConfirmation)
 );
 router.post(
